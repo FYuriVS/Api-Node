@@ -11,7 +11,10 @@ interface IRequest {
 }
 
 interface IResponse {
-  user: User;
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
   token: string;
 }
 
@@ -22,7 +25,7 @@ class AuthService {
     const user = await usersRepository.findByEmail(email);
 
     if (!user) {
-      throw new AppError('Combinação de email e senha incorretos.', 401);
+      throw new AppError('Combinação de email e senha incorretos1.', 401);
     }
 
     const passwordConfirmed = await compare(password, user.password);
@@ -39,7 +42,10 @@ class AuthService {
     });
 
     return {
-      user,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
       token,
     };
   }
