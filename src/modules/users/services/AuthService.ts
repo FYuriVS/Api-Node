@@ -1,9 +1,9 @@
 import { getCustomRepository } from 'typeorm';
 import AppError from '@shared/errors/AppError';
-import User from '../typeorm/entities/User';
 import { UserRepository } from '../typeorm/repositories/UsersRepository';
-import { compare, hash } from 'bcryptjs';
+import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import authConfig from '@config/auth';
 
 interface IRequest {
   email: string;
@@ -36,9 +36,9 @@ class AuthService {
 
     await usersRepository.save(user);
 
-    const token = sign({}, '1e4b25c00c673b26bbd282709cfd6d9f', {
+    const token = sign({}, authConfig.jwt.secret, {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn: authConfig.jwt.expiresIn,
     });
 
     return {
